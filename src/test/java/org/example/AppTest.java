@@ -54,11 +54,11 @@ class StringFormatterTest {
 class UserServiceTest {
     private List<User> users;
     private UserService<String> service;
+    private ApplicationContext applicationContext=new ApplicationContext();
 
     @BeforeEach
     void setUp(){
-        UserFormatter<String> formatter=new StringFormatter();
-        service = new UserService<>(formatter);
+        service = applicationContext.getService();
 
         users = List.of(
                 new User(3, "Анна", "Смирнова", new StandardUser()),
@@ -79,4 +79,36 @@ class UserServiceTest {
                 .extracting(s -> s.substring(s.indexOf("ID:") + 4, s.indexOf(",")))
                 .containsExactly("1", "4", "2", "3");
     }
+}
+
+@DisplayName("ApplicationContext тесты")
+class ApplicationContextTest{
+    private ApplicationContext applicationContext;
+
+    @BeforeEach
+    void setUp() {
+        applicationContext = new ApplicationContext();
+    }
+
+    @Test
+    @DisplayName("service not null")
+    void shouldReturnNotNullService() {
+        assertThat(applicationContext.getService()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("formatter not null")
+    void shouldReturnNotNullFormatter() {
+        assertThat(applicationContext.getFormatter()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Сервис возвращает одинаковый результат")
+    void shouldReturnSameServiceOnMultipleCalls() {
+        UserService<String> first = applicationContext.getService();
+        UserService<String> second = applicationContext.getService();
+        assertThat(first).isSameAs(second);
+    }
+
+
 }

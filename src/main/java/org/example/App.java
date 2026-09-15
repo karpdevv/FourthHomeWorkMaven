@@ -13,6 +13,8 @@ public class App {
      */
     public static void main(String[] args) {
 
+        ApplicationContext applicationContext=new ApplicationContext();
+
 
 
         List<User> userList = List.of(
@@ -23,8 +25,7 @@ public class App {
                 new User(5, "Александр", "Филин", new Admin())
         );
 
-        UserFormatter<String> formatter=new StringFormatter();
-        UserService<String> service = new UserService<>(formatter);
+        UserService<String> service = applicationContext.getService();
 
         List<String> userString=service.prepareUserList(userList);
 
